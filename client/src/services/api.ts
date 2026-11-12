@@ -1,4 +1,5 @@
-const API_BASE = "/api";
+const BACKEND_URL = (import.meta.env.VITE_API_URL || "").replace(/\/$/, "");
+const API_BASE = BACKEND_URL ? `${BACKEND_URL}/api` : "/api";
 
 export async function fetchApi<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
   const token = localStorage.getItem("ratelive_token");
