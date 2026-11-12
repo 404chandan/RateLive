@@ -1,15 +1,19 @@
 import React, { useState, useEffect } from "react";
 import {
   Search,
-  SlidersHorizontal,
-  TrendingUp,
   Sparkles,
   Utensils,
-  Store,
   RefreshCw,
   X,
   MapPin,
+  TrendingUp,
+  Activity,
+  Layers,
+  ChevronRight,
+  ShieldCheck,
+  Flame,
 } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Sidebar } from "../components/layout/Sidebar";
 import { Topbar } from "../components/layout/Topbar";
 import { VenueCard } from "../components/discovery/VenueCard";
@@ -99,7 +103,6 @@ export const ExplorePage: React.FC = () => {
 
   const cuisines = ["all", "South Indian", "Burgers", "Coffee", "Andhra"];
 
-  // Filtered and sorted venues
   const filteredVenues = venues
     .filter((venue) => {
       const matchesArea =
@@ -126,7 +129,7 @@ export const ExplorePage: React.FC = () => {
     });
 
   return (
-    <div className="min-h-screen flex bg-canvas text-ink">
+    <div className="min-h-screen flex bg-canvas text-ink aurora-bg">
       <Sidebar
         activeNeighborhood={selectedNeighborhood}
         onSelectNeighborhood={setSelectedNeighborhood}
@@ -134,66 +137,69 @@ export const ExplorePage: React.FC = () => {
         onToggleSavedOnly={() => setShowSavedOnly((s) => !s)}
       />
 
-      <main className="flex-1 min-w-0 flex flex-col">
-        <Topbar breadcrumbTitle="Discover" />
+      <main className="flex-1 min-w-0 flex flex-col relative z-10">
+        <Topbar breadcrumbTitle="Live Food & Venue Intelligence" />
 
         <div className="max-w-7xl w-full mx-auto p-4 md:p-8 space-y-6 pt-16 md:pt-6">
-          {/* Header */}
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-            <div>
-              <div className="font-mono text-[10px] text-emeraldLive uppercase tracking-wider font-semibold">
-                Bengaluru · City Pulse
+          {/* Hero Banner Section */}
+          <div className="relative rounded-3xl p-6 md:p-8 border border-line bg-gradient-to-r from-panel via-panel-raised to-panel overflow-hidden shadow-2xl">
+            <div className="absolute right-0 top-0 bottom-0 w-1/3 bg-gradient-to-l from-emerald/10 via-transparent to-transparent pointer-events-none" />
+            <div className="relative z-10 max-w-2xl space-y-2">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-emerald/30 bg-emerald/10 text-[11px] font-mono text-emerald font-semibold shimmer-badge">
+                <span className="w-2 h-2 rounded-full bg-emerald live-pulse-beacon" />
+                <span>BENGALURU REAL-TIME METROPOLIS RADAR</span>
               </div>
-              <h1 className="text-2xl md:text-3xl font-extrabold font-display tracking-tight text-ink mt-1">
-                Find your next great meal.
+              <h1 className="text-3xl md:text-4xl font-extrabold font-display tracking-tight text-ink">
+                Real Experiences. <span className="text-emerald">Live Insights.</span>
               </h1>
-              <p className="text-xs text-muted mt-1 max-w-lg">
-                Real-time dining intelligence and live community sentiment from diners right now.
+              <p className="text-xs md:text-sm text-muted leading-relaxed">
+                Experience dining discovery free of outdated algorithms. Monitor genuine customer sentiment, verified recent visits, and dish quality shifts happening across Bengaluru right now.
               </p>
-            </div>
-
-            <div className="flex items-center gap-2 font-mono text-[10px] text-muted self-start md:self-end">
-              <span className="w-2 h-2 rounded-full bg-emeraldStrong live-pulse" />
-              <span>LIVE BENGALURU RADAR ACTIVE</span>
             </div>
           </div>
 
-          {/* Controls bar */}
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-3">
+          {/* Precision Controls Bar */}
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
+            {/* Search Input with floating keyboard shortcut */}
             <div className="md:col-span-6 relative">
               <Search
-                size={16}
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-quiet"
+                size={17}
+                className="absolute left-3.5 top-1/2 -translate-y-1/2 text-quiet"
               />
               <input
                 type="search"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search a place, dish, or neighborhood..."
-                className="w-full h-11 pl-9 pr-4 rounded-lg bg-panel border border-line text-ink text-xs focus:outline-none focus:border-emeraldLive placeholder:text-quiet"
+                placeholder="Search restaurant, dish, or neighborhood..."
+                className="w-full h-11 pl-10 pr-12 rounded-xl bg-panel/90 border border-line text-ink text-xs focus:outline-none focus:border-emerald focus:ring-2 focus:ring-emerald/20 transition-all placeholder:text-quiet"
               />
+              <span className="absolute right-3.5 top-1/2 -translate-y-1/2 font-mono text-[10px] text-quiet border border-line px-1.5 py-0.5 rounded bg-panel-raised pointer-events-none">
+                /
+              </span>
             </div>
 
+            {/* Sort Select */}
             <div className="md:col-span-3">
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="w-full h-11 px-3 rounded-lg bg-panel border border-line text-ink text-xs focus:outline-none focus:border-emeraldLive"
+                className="w-full h-11 px-3.5 rounded-xl bg-panel/90 border border-line text-ink text-xs focus:outline-none focus:border-emerald font-medium transition-all"
               >
                 <option value="recent">Sort: Highest Recency Trend</option>
                 <option value="rating">Sort: Top Rated Overall</option>
-                <option value="activity">Sort: Most Active Visits</option>
+                <option value="activity">Sort: Most Active Footfall</option>
               </select>
             </div>
 
-            <div className="md:col-span-3 flex p-1 bg-panel border border-line rounded-lg">
+            {/* Recency Time Filter Tabs */}
+            <div className="md:col-span-3 flex p-1 bg-panel/90 border border-line rounded-xl shadow-inner">
               {(["3h", "today", "7d"] as const).map((r) => (
                 <button
                   key={r}
                   onClick={() => setTimeRange(r)}
-                  className={`flex-1 py-1.5 rounded text-xs font-mono transition-all ${
+                  className={`flex-1 py-2 rounded-lg text-xs font-mono font-bold transition-all ${
                     timeRange === r
-                      ? "bg-emeraldStrong/15 text-emeraldLive font-semibold shadow-sm"
+                      ? "bg-emerald text-black shadow-md shadow-emerald/20"
                       : "text-muted hover:text-ink"
                   }`}
                 >
@@ -203,61 +209,58 @@ export const ExplorePage: React.FC = () => {
             </div>
           </div>
 
-          {/* Citywide stat counter cards */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-            <div className="p-3.5 rounded-lg border border-line bg-panel flex items-center justify-between">
-              <div>
-                <span className="text-[11px] text-muted">Venues monitored</span>
-                <div className="text-xl font-display font-bold text-ink mt-0.5">
-                  {cityStats.totalVenues}
+          {/* Interactive KPI Cards */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5">
+            {[
+              {
+                label: "Venues Monitored",
+                val: cityStats.totalVenues,
+                delta: "+6 this week",
+                color: "text-ink",
+              },
+              {
+                label: "Verified Visits Today",
+                val: cityStats.verifiedVisitsToday.toLocaleString(),
+                delta: "↑ 12% velocity",
+                color: "text-emerald",
+              },
+              {
+                label: "Citywide Average Rating",
+                val: `${cityStats.citywideRating} ★`,
+                delta: "+0.08 shift",
+                color: "text-emerald",
+              },
+              {
+                label: "Live Dynamic Signals",
+                val: cityStats.liveSignalsCount,
+                delta: "across 9 zones",
+                color: "text-cyan",
+              },
+            ].map((kpi, idx) => (
+              <motion.div
+                key={kpi.label}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.2, delay: idx * 0.05 }}
+                className="p-4 rounded-2xl border border-line bg-panel/75 backdrop-blur-md flex items-center justify-between glass-card"
+              >
+                <div>
+                  <span className="text-[11px] text-muted font-sans font-medium">{kpi.label}</span>
+                  <div className={`text-2xl font-display font-extrabold ${kpi.color} mt-1`}>
+                    {kpi.val}
+                  </div>
                 </div>
-              </div>
-              <span className="font-mono text-[10px] text-emeraldLive bg-emeraldStrong/10 px-2 py-0.5 rounded">
-                +6 this week
-              </span>
-            </div>
-
-            <div className="p-3.5 rounded-lg border border-line bg-panel flex items-center justify-between">
-              <div>
-                <span className="text-[11px] text-muted">Verified visits today</span>
-                <div className="text-xl font-display font-bold text-ink mt-0.5">
-                  {cityStats.verifiedVisitsToday.toLocaleString()}
-                </div>
-              </div>
-              <span className="font-mono text-[10px] text-emeraldLive bg-emeraldStrong/10 px-2 py-0.5 rounded">
-                ↑ 12%
-              </span>
-            </div>
-
-            <div className="p-3.5 rounded-lg border border-line bg-panel flex items-center justify-between">
-              <div>
-                <span className="text-[11px] text-muted">Citywide rating</span>
-                <div className="text-xl font-display font-bold text-emeraldLive mt-0.5">
-                  {cityStats.citywideRating} ★
-                </div>
-              </div>
-              <span className="font-mono text-[10px] text-emeraldLive bg-emeraldStrong/10 px-2 py-0.5 rounded">
-                +0.08
-              </span>
-            </div>
-
-            <div className="p-3.5 rounded-lg border border-line bg-panel flex items-center justify-between">
-              <div>
-                <span className="text-[11px] text-muted">Live signals</span>
-                <div className="text-xl font-display font-bold text-ink mt-0.5">
-                  {cityStats.liveSignalsCount}
-                </div>
-              </div>
-              <span className="font-mono text-[10px] text-amber bg-amber/10 px-2 py-0.5 rounded">
-                across 9 areas
-              </span>
-            </div>
+                <span className="font-mono text-[10px] text-emerald bg-emerald/10 border border-emerald/20 px-2 py-0.5 rounded font-bold">
+                  {kpi.delta}
+                </span>
+              </motion.div>
+            ))}
           </div>
 
-          {/* Main Content Grid: Map + List on Left, Live Pulse on Right */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
-            <div className="lg:col-span-8 space-y-5">
-              {/* Interactive Map */}
+          {/* Main Grid: Interactive Map + Filtered Venue Radar List */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            <div className="lg:col-span-8 space-y-6">
+              {/* Satellite Interactive Map */}
               <LiveMap
                 venues={venues}
                 onSelectVenue={(v) => {
@@ -266,15 +269,15 @@ export const ExplorePage: React.FC = () => {
                 }}
               />
 
-              {/* Venue Results List */}
-              <section className="rounded-lg border border-line bg-panel overflow-hidden">
-                <div className="p-3.5 border-b border-line flex items-center justify-between bg-sidebar">
+              {/* Dynamic Venue List */}
+              <section className="rounded-2xl border border-line bg-panel/80 backdrop-blur-xl overflow-hidden shadow-xl">
+                <div className="p-4 border-b border-line flex items-center justify-between bg-sidebar/80">
                   <div>
-                    <h2 className="text-xs font-semibold text-ink">
-                      Places with recent diner visits
+                    <h2 className="text-xs font-bold text-ink uppercase tracking-wider font-mono">
+                      Verified Venue Radar Stream
                     </h2>
-                    <span className="text-[10px] font-mono text-muted">
-                      {filteredVenues.length} {filteredVenues.length === 1 ? "place" : "places"} matching filters
+                    <span className="text-[11px] font-mono text-muted">
+                      {filteredVenues.length} {filteredVenues.length === 1 ? "venue" : "venues"} matching live filters
                     </span>
                   </div>
 
@@ -286,93 +289,102 @@ export const ExplorePage: React.FC = () => {
                         setSelectedCuisine("all");
                         setShowSavedOnly(false);
                       }}
-                      className="text-xs text-emeraldLive hover:underline flex items-center gap-1 font-mono"
+                      className="text-xs text-emerald hover:underline flex items-center gap-1 font-mono font-bold"
                     >
-                      Clear filters <X size={13} />
+                      Reset filters <X size={14} />
                     </button>
                   )}
                 </div>
 
-                {/* Cuisine Filter Pills */}
-                <div className="flex items-center gap-1.5 p-2.5 border-b border-line overflow-x-auto scrollbar-none">
-                  {cuisines.map((c) => (
-                    <button
-                      key={c}
-                      onClick={() => setSelectedCuisine(c)}
-                      className={`text-[11px] px-3 py-1 rounded-md border whitespace-nowrap transition-colors ${
-                        selectedCuisine === c
-                          ? "bg-emeraldStrong/15 border-emeraldLive text-emeraldLive font-medium"
-                          : "border-line text-muted hover:text-ink hover:bg-panel-raised"
-                      }`}
-                    >
-                      {c === "all" ? "All cuisines" : c}
-                    </button>
-                  ))}
-                </div>
-
-                {/* Venues Rendered */}
-                <div className="divide-y divide-line">
-                  {loading ? (
-                    <div className="p-8 text-center text-xs text-muted font-mono">
-                      Loading live restaurant radar...
-                    </div>
-                  ) : filteredVenues.length === 0 ? (
-                    <div className="p-8 text-center space-y-2">
-                      <p className="text-xs text-muted">
-                        No restaurants match those criteria. Try another search or neighborhood.
-                      </p>
+                {/* Cuisine Filter Pills with active neon glow */}
+                <div className="flex items-center gap-2 p-3 border-b border-line overflow-x-auto scrollbar-none bg-panel/40">
+                  {cuisines.map((c) => {
+                    const isSelected = selectedCuisine === c;
+                    return (
                       <button
-                        onClick={() => {
-                          setSearchQuery("");
-                          setSelectedNeighborhood("All areas");
-                          setSelectedCuisine("all");
-                        }}
-                        className="text-xs text-emeraldLive font-semibold underline"
+                        key={c}
+                        onClick={() => setSelectedCuisine(c)}
+                        className={`text-xs px-3.5 py-1.5 rounded-xl border whitespace-nowrap font-medium transition-all duration-200 ${
+                          isSelected
+                            ? "bg-emerald text-black border-emerald font-bold shadow-md shadow-emerald/30 scale-105"
+                            : "border-line text-muted hover:text-ink hover:bg-panel-raised"
+                        }`}
                       >
-                        Reset filters
+                        {c === "all" ? "All Cuisines" : c}
                       </button>
-                    </div>
-                  ) : (
-                    filteredVenues.map((venue) => (
-                      <VenueCard
-                        key={venue._id}
-                        venue={venue}
-                        isSaved={savedVenueIds.includes(venue._id)}
-                        onToggleSave={toggleSaveVenue}
-                        onOpenDetails={(v) => {
-                          setSelectedVenue(v);
-                          setIsDetailModalOpen(true);
-                        }}
-                        timeRange={timeRange}
-                      />
-                    ))
-                  )}
+                    );
+                  })}
+                </div>
+
+                {/* Venue Cards List */}
+                <div className="p-3 space-y-2.5">
+                  <AnimatePresence mode="popLayout">
+                    {loading ? (
+                      <div className="p-12 text-center text-xs text-muted font-mono animate-pulse">
+                        Synchronizing live satellite telemetry...
+                      </div>
+                    ) : filteredVenues.length === 0 ? (
+                      <div className="p-12 text-center space-y-3">
+                        <p className="text-xs text-muted">
+                          No restaurants match your filters. Try selecting another area or cuisine.
+                        </p>
+                        <button
+                          onClick={() => {
+                            setSearchQuery("");
+                            setSelectedNeighborhood("All areas");
+                            setSelectedCuisine("all");
+                          }}
+                          className="px-4 py-2 rounded-xl bg-emerald text-black text-xs font-bold shadow hover:bg-emerald/90 transition-all"
+                        >
+                          Show all venues
+                        </button>
+                      </div>
+                    ) : (
+                      filteredVenues.map((venue) => (
+                        <VenueCard
+                          key={venue._id}
+                          venue={venue}
+                          isSaved={savedVenueIds.includes(venue._id)}
+                          onToggleSave={toggleSaveVenue}
+                          onOpenDetails={(v) => {
+                            setSelectedVenue(v);
+                            setIsDetailModalOpen(true);
+                          }}
+                          timeRange={timeRange}
+                        />
+                      ))
+                    )}
+                  </AnimatePresence>
                 </div>
               </section>
             </div>
 
-            {/* Right Column: Live Pulse, Signals, Radar */}
-            <aside className="lg:col-span-4 space-y-5">
-              {/* Pulse & Trend Card */}
-              <div className="rounded-lg border border-line bg-panel p-4 space-y-4">
+            {/* Right Column: Dynamic Live Stream & Trending Dish Signals */}
+            <aside className="lg:col-span-4 space-y-6">
+              {/* Citywide Pulse Card */}
+              <div className="rounded-2xl border border-line bg-panel/80 backdrop-blur-xl p-5 space-y-4 shadow-xl glass-card">
                 <div className="flex items-center justify-between border-b border-line pb-3">
-                  <div className="text-xs font-semibold text-ink">Bengaluru Pulse</div>
-                  <span className="font-mono text-[10px] text-muted uppercase">Past 6 Hours</span>
+                  <div className="text-xs font-bold text-ink uppercase tracking-wider font-mono">
+                    Bengaluru Recency Wave
+                  </div>
+                  <span className="font-mono text-[10px] text-emerald bg-emerald/10 px-2 py-0.5 rounded font-bold">
+                    PAST 6H
+                  </span>
                 </div>
 
                 <div className="flex items-baseline justify-between">
                   <div>
-                    <div className="text-2xl font-display font-extrabold text-ink">
-                      4.36 <span className="text-emeraldLive text-lg">★</span>
+                    <div className="text-3xl font-display font-extrabold text-ink">
+                      4.36 <span className="text-emerald text-xl">★</span>
                     </div>
-                    <div className="text-[11px] text-muted">Average recent visit rating</div>
+                    <div className="text-xs text-muted mt-0.5">Weighted visit satisfaction</div>
                   </div>
-                  <div className="text-xs font-mono text-emeraldLive bg-emeraldStrong/10 border border-emeraldLive/30 px-2 py-1 rounded">
+                  <div className="text-xs font-mono font-bold text-emerald bg-emerald/10 border border-emerald/30 px-2 py-1 rounded">
                     +0.08 ↑
                   </div>
                 </div>
 
-                {/* SVG Trend Wave */}
+                {/* Animated SVG Trend Wave */}
                 <div className="relative h-24 w-full border-b border-line pt-2">
                   <svg
                     viewBox="0 0 420 90"
@@ -380,198 +392,84 @@ export const ExplorePage: React.FC = () => {
                     className="w-full h-full overflow-visible"
                   >
                     <defs>
-                      <linearGradient id="liveWave" x1="0" x2="0" y1="0" y2="1">
-                        <stop offset="0%" stopColor="#67c77c" stopOpacity="0.3" />
-                        <stop offset="100%" stopColor="#67c77c" stopOpacity="0" />
+                      <linearGradient id="liveGlowGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#5be080" stopOpacity="0.4" />
+                        <stop offset="100%" stopColor="#5be080" stopOpacity="0" />
                       </linearGradient>
                     </defs>
                     <path
                       d="M0 70 C30 65, 60 75, 90 55 C120 40, 150 60, 180 45 C210 35, 240 50, 270 30 C300 25, 330 40, 360 20 C390 15, 410 22, 420 12 L420 90 L0 90 Z"
-                      fill="url(#liveWave)"
+                      fill="url(#liveGlowGrad)"
                     />
                     <path
                       d="M0 70 C30 65, 60 75, 90 55 C120 40, 150 60, 180 45 C210 35, 240 50, 270 30 C300 25, 330 40, 360 20 C390 15, 410 22, 420 12"
                       fill="none"
-                      stroke="#67c77c"
+                      stroke="#5be080"
                       strokeWidth="2.5"
                     />
-                    <circle cx="420" cy="12" r="4" fill="#a4e2ad" />
+                    <circle cx="420" cy="12" r="5" fill="#5be080" className="animate-ping" />
+                    <circle cx="420" cy="12" r="3.5" fill="#5be080" />
                   </svg>
                 </div>
 
                 <div className="flex items-center justify-between text-[10px] font-mono text-quiet">
-                  <span>10:00</span>
-                  <span>12:00</span>
-                  <span>14:00</span>
-                  <span>16:00</span>
+                  <span>10:00 AM</span>
+                  <span>12:00 PM</span>
+                  <span>02:00 PM</span>
+                  <span>NOW</span>
                 </div>
               </div>
 
-              {/* Recent Live Signals */}
-              <div className="rounded-lg border border-line bg-panel p-4 space-y-3">
-                <div className="flex items-center justify-between border-b border-line pb-2.5">
-                  <span className="text-xs font-semibold text-ink">Recent Signals</span>
-                  <span className="font-mono text-[10px] text-emeraldLive flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emeraldStrong live-pulse" />
-                    LIVE STREAM
+              {/* Verified Trending Dishes Radar */}
+              <div className="rounded-2xl border border-line bg-panel/80 backdrop-blur-xl p-5 space-y-4 shadow-xl glass-card">
+                <div className="flex items-center justify-between border-b border-line pb-3">
+                  <span className="text-xs font-bold text-ink uppercase tracking-wider font-mono">
+                    Dish Radar Velocity
                   </span>
+                  <Flame size={15} className="text-coral animate-bounce" />
                 </div>
 
                 <div className="space-y-2.5 text-xs">
-                  <div className="flex items-start gap-2.5 p-2 rounded bg-panel-raised border border-line">
-                    <div className="p-1 rounded bg-emeraldStrong/15 text-emeraldLive">
-                      <TrendingUp size={14} />
-                    </div>
-                    <div>
-                      <div className="text-ink font-medium">Dish trending: Ghee Roast Dosa</div>
-                      <div className="text-[10px] text-muted">MTR 1924 · Koramangala (2m ago)</div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-2.5 p-2 rounded bg-panel-raised border border-line">
-                    <div className="p-1 rounded bg-cyanLive/15 text-cyanLive">
-                      <Sparkles size={14} />
-                    </div>
-                    <div>
-                      <div className="text-ink font-medium">Cold brew gaining momentum</div>
-                      <div className="text-[10px] text-muted">Third Wave · HSR Layout (8m ago)</div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-2.5 p-2 rounded bg-panel-raised border border-line">
-                    <div className="p-1 rounded bg-amber/15 text-amber">
-                      <Utensils size={14} />
-                    </div>
-                    <div>
-                      <div className="text-ink font-medium">Wait times elevated · 18 min</div>
-                      <div className="text-[10px] text-muted">Truffles · Indiranagar (12m ago)</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Verified Visit Spotlight */}
-              <div className="rounded-lg border border-line bg-panel p-4 space-y-3">
-                <div className="text-xs font-semibold text-ink border-b border-line pb-2">
-                  Popular Right Now (Recent Visits)
-                </div>
-                <div className="space-y-2 text-xs">
                   {[
-                    { dish: "Smash Burgers", area: "Indiranagar", visits: 38, delta: "+18%" },
-                    { dish: "Ghee Roast Dosa", area: "Koramangala", visits: 31, delta: "+12%" },
-                    { dish: "Iced Filter Coffee", area: "HSR Layout", visits: 24, delta: "+9%" },
+                    { dish: "All American Smash Burger", area: "Truffles · Indiranagar", mentions: "38 in 3h", pct: "+18%", color: "text-emerald" },
+                    { dish: "Crispy Ghee Roast Dosa", area: "MTR 1924 · Koramangala", mentions: "31 in 3h", pct: "+14%", color: "text-emerald" },
+                    { dish: "Single-Origin Cold Brew", area: "Third Wave · HSR", mentions: "24 in 3h", pct: "+9%", color: "text-cyan" },
+                    { dish: "Fiery Andhra Banana Leaf Meal", area: "Nagarjuna · Indiranagar", mentions: "19 in 3h", pct: "+11%", color: "text-emerald" },
                   ].map((item) => (
                     <div
                       key={item.dish}
-                      className="flex items-center justify-between p-2 rounded bg-panel-raised border border-line"
+                      className="p-3 rounded-xl bg-panel-raised border border-line flex items-center justify-between hover:border-emerald/40 transition-colors"
                     >
-                      <div>
-                        <div className="font-medium text-ink">{item.dish}</div>
+                      <div className="space-y-0.5">
+                        <div className="font-semibold text-ink">{item.dish}</div>
                         <div className="text-[10px] text-muted">
-                          {item.area} · {item.visits} visits
+                          {item.area} · {item.mentions}
                         </div>
                       </div>
-                      <span className="font-mono text-xs text-emeraldLive font-semibold">
-                        {item.delta}
+                      <span className={`font-mono text-xs font-bold ${item.color}`}>
+                        {item.pct}
                       </span>
                     </div>
                   ))}
                 </div>
               </div>
+
+              {/* Zero-PII Security Shield Pill */}
+              <div className="p-4 rounded-2xl border border-emerald/30 bg-emerald/5 backdrop-blur-xl flex items-center gap-3 text-xs text-muted">
+                <ShieldCheck size={24} className="text-emerald flex-shrink-0" />
+                <div className="space-y-0.5">
+                  <div className="text-xs font-bold text-ink">Zero-PII Privacy Shield Active</div>
+                  <p className="text-[11px] leading-relaxed">
+                    Customer feedback is pseudonymized and authenticated via server-side HMAC hashing.
+                  </p>
+                </div>
+              </div>
             </aside>
-          </div>
-
-          {/* Marketing Sections: Features, Pricing, About */}
-          <div className="space-y-6 pt-10 border-t border-line">
-            <section id="features" className="rounded-lg border border-line bg-panel p-6 space-y-4">
-              <div>
-                <div className="font-mono text-[10px] text-emeraldLive uppercase">
-                  A Better Signal For Every Meal
-                </div>
-                <h2 className="text-lg font-bold font-display text-ink mt-0.5">
-                  Features built around what matters right now
-                </h2>
-                <p className="text-xs text-muted mt-1 max-w-xl">
-                  Useful context from recent diner visits, organized to help diners make quick decisions and restaurants act on real feedback.
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                {[
-                  {
-                    title: "Recency-First Ratings",
-                    desc: "See how places perform right now, today, and across the last 7 days rather than years-old stale reviews.",
-                  },
-                  {
-                    title: "Dish-Level Discovery",
-                    desc: "Discover the specific dishes that diners are praising or critiquing in the past few hours.",
-                  },
-                  {
-                    title: "Neighborhood Context",
-                    desc: "Compare dynamic footfalls and customer satisfaction across Bengaluru's top dining districts.",
-                  },
-                  {
-                    title: "Zero-PII Privacy Layer",
-                    desc: "Diners share candid, honest feedback without ever worrying about restaurants knowing their identity.",
-                  },
-                ].map((f) => (
-                  <div key={f.title} className="p-4 rounded-lg bg-panel-raised border border-line space-y-2">
-                    <h3 className="font-semibold text-xs text-ink">{f.title}</h3>
-                    <p className="text-[11px] text-muted leading-relaxed">{f.desc}</p>
-                  </div>
-                ))}
-              </div>
-            </section>
-
-            <section id="pricing" className="rounded-lg border border-line bg-panel p-6 space-y-4">
-              <div>
-                <div className="font-mono text-[10px] text-emeraldLive uppercase">
-                  Transparent Plans
-                </div>
-                <h2 className="text-lg font-bold font-display text-ink mt-0.5">
-                  Pricing for diners & restaurant owners
-                </h2>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="p-4 rounded-lg bg-panel-raised border border-line space-y-3">
-                  <div className="text-[10px] font-mono text-muted uppercase">Diner · Free</div>
-                  <div className="text-2xl font-display font-bold text-ink">
-                    ₹0 <span className="text-xs font-sans text-muted font-normal">/ always</span>
-                  </div>
-                  <p className="text-xs text-muted">
-                    Explore live ratings, real-time dish radars, and submit private feedback.
-                  </p>
-                </div>
-
-                <div className="p-4 rounded-lg bg-panel-raised border border-[#c92323]/40 space-y-3 relative overflow-hidden">
-                  <div className="text-[10px] font-mono text-[#c92323] uppercase font-bold">
-                    Venue · Growth
-                  </div>
-                  <div className="text-2xl font-display font-bold text-ink">
-                    ₹1,999 <span className="text-xs font-sans text-muted font-normal">/ month</span>
-                  </div>
-                  <p className="text-xs text-muted">
-                    Dish performance tracking, anonymous customer inbox, AI sentiment analysis, and competitor benchmarks.
-                  </p>
-                </div>
-
-                <div className="p-4 rounded-lg bg-panel-raised border border-line space-y-3">
-                  <div className="text-[10px] font-mono text-muted uppercase">Enterprise Chain</div>
-                  <div className="text-2xl font-display font-bold text-ink">
-                    Custom <span className="text-xs font-sans text-muted font-normal">/ multi-branch</span>
-                  </div>
-                  <p className="text-xs text-muted">
-                    Consolidated multi-unit executive reporting, SLA monitoring, and API integrations.
-                  </p>
-                </div>
-              </div>
-            </section>
           </div>
         </div>
       </main>
 
-      {/* Venue Detail Modal */}
+      {/* Detail Modal */}
       {selectedVenue && (
         <VenueDetailModal
           venue={selectedVenue}
@@ -600,14 +498,13 @@ export const ExplorePage: React.FC = () => {
         />
       )}
 
-      {/* Live Toast */}
+      {/* Toast Notification */}
       {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-4 py-3 rounded-lg border border-emeraldLive/40 bg-panel text-emeraldLive shadow-2xl font-sans text-xs animate-in slide-in-from-bottom duration-200">
-          <span className="w-2 h-2 rounded-full bg-emeraldStrong live-pulse" />
+        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-4 py-3 rounded-xl border border-emerald/40 bg-panel/95 text-emerald shadow-2xl font-sans text-xs animate-in slide-in-from-bottom duration-200">
+          <span className="w-2 h-2 rounded-full bg-emerald live-pulse-beacon" />
           <span>{toastMessage}</span>
         </div>
       )}
     </div>
   );
 };
-
