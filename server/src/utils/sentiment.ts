@@ -70,3 +70,4 @@ export function analyzeSentiment(comment: string, overallRating: number): Sentim
 
   return { label, score: Number(score.toFixed(2)), themes };
 }
+

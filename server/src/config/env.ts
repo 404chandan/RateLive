@@ -11,3 +11,4 @@ export const env = {
   PRIVACY_HMAC_SECRET: process.env.PRIVACY_HMAC_SECRET || "ratelive-dev-hmac-privacy-key",
   CLIENT_URL: process.env.CLIENT_URL || "http://localhost:5173",
 };
+

@@ -1,0 +1,92 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  --canvas: #101513;
+  --sidebar: #131a17;
+  --panel: #18211d;
+  --panel-raised: #1d2923;
+  --line: #2a3931;
+  --ink: #edf4ee;
+  --muted: #9aa99f;
+  --quiet: #6f8075;
+  --green: #a4e2ad;
+  --green-strong: #67c77c;
+  --cyan: #92d8d0;
+  --amber: #e8bb78;
+  --red: #e58b82;
+  --brand-red: #c92323;
+  --accent: #d32f2f;
+  --sans: "DM Sans", sans-serif;
+  --display: "Manrope", sans-serif;
+  --mono: "DM Mono", monospace;
+}
+
+[data-theme="light"] {
+  color-scheme: light;
+  --canvas: #f8faf8;
+  --sidebar: #ffffff;
+  --panel: #ffffff;
+  --panel-raised: #f1f5f2;
+  --line: #e1e7e3;
+  --ink: #111a14;
+  --muted: #526357;
+  --quiet: #84968a;
+  --green: #1f7d38;
+  --green-strong: #248a3f;
+  --cyan: #0d8376;
+  --amber: #b26e0e;
+  --red: #c53030;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.material-symbols-rounded {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+/* Glassmorphism accents */
+.glass-panel {
+  background: rgba(24, 33, 29, 0.75);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--line);
+}
+
+/* Subtle map pattern */
+.map-grid-bg {
+  background-color: #202c26;
+  background-image:
+    linear-gradient(27deg, transparent 47%, #35453b 48%, #35453b 49%, transparent 50%),
+    linear-gradient(118deg, transparent 43%, #35453b 44%, #35453b 45%, transparent 46%),
+    linear-gradient(88deg, transparent 62%, #35453b 63%, #35453b 64%, transparent 65%),
+    linear-gradient(158deg, transparent 28%, #35453b 29%, #35453b 30%, transparent 31%);
+  background-size: 190px 160px, 230px 190px, 240px 160px, 260px 210px;
+}
+
+@keyframes pulse-live {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(103, 199, 124, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(103, 199, 124, 0);
+  }
+}
+
+.live-pulse {
+  animation: pulse-live 2s infinite ease-in-out;
+}
+
